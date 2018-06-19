@@ -73,7 +73,7 @@ def download_folder(ftp, userpath,foldername, verbose):
      #write bar with 100%
     sys.stdout.write("[{}] {}%\n".format('='*(progress_bar_width-1), 100))
     sys.stdout.flush()
-    save_mod_dates(mod_dates,os.path.join(userpath,'mod_dates'))
+    # save_mod_dates(mod_dates,os.path.join(userpath,'mod_dates'))
 
 def delete_folder(folder, verbose = True):
     for file in os.listdir(folder):
