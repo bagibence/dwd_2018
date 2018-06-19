@@ -1,12 +1,14 @@
-import os, zipfile, sys
+import os, sys
+
+import zipfile
 
 try:
     import shutil #this module can get the terminal width
-    console_width = shutil.get_terminal_size()[0]
+    term_width = shutil.get_terminal_size()[0]
 except:
     print("Using 'shutil' failed, will assume console width of 80")
-    console_width = 80 #default terminal width
-progress_bar_width = console_width - 6
+    term_width = 80 #default terminal width
+progress_bar_width = term_width - 6
 
 def unzip_folder(dir_name,verbose=True):
     extension = ".zip"
@@ -19,15 +21,19 @@ def unzip_folder(dir_name,verbose=True):
             zip_ref.close() # close file
             os.remove(file_name) # delete zipped file
             if verbose:
-                # what this actually does is to overwrite the last printout that was the statusbar
-                # the ljust method pads the string with whitespaces, this is needed to remove
-                # the previous statusbar
-                sys.stdout.write(("unzipped {}".format(item)).ljust(console_width))
+                # what this actually does is to overwrite the last printout that
+                # was the statusbar the ljust method pads the string with
+                # whitespaces, this is needed to remove the previous statusbar
+                sys.stdout.write(("unzipped {}".format(item)).ljust(term_width))
                 sys.stdout.write('\n')
                 sys.stdout.flush()
             perc = int(100*i/len(os.listdir(dir_name)))
-            pperc = int(progress_bar_width*i/len(os.listdir(dir_name))) #percentage of progressbar thats done
-            sys.stdout.write("[{}] {}%\r".format(('='*pperc).ljust(progress_bar_width), str(perc).zfill(2)))
+            #percentage of progressbar thats done
+            pperc = int(progress_bar_width*i/len(os.listdir(dir_name)))
+            sys.stdout.write("[{}] {}%\r".format(
+                                          ('='*pperc).ljust(progress_bar_width),
+                                          str(perc).zfill(2)))
             sys.stdout.flush()
-    sys.stdout.write("[{}] {}%\n".format('='*(progress_bar_width-1), 100)) #write bar with 100%
+    #write bar with 100%
+    sys.stdout.write("[{}] {}%\n".format('='*(progress_bar_width-1), 100))
     sys.stdout.flush()

@@ -2,9 +2,10 @@
 
 import os
 import sys
+import getopt
+
 from useftp import download_data
 from unzip_all import unzip_folder
-import getopt
 
 def get_data(userpath, historical, recent, hourly, verbose):
     #download the files
@@ -18,18 +19,24 @@ def get_data(userpath, historical, recent, hourly, verbose):
     #unzip the files
     print("unzipping data")
     if historical or recent:
-        localdir = os.path.join(userpath,'pub','CDC','observations_germany','climate','daily','kl')
+        localdir = os.path.join(userpath,'pub','CDC','observations_germany',
+                                'climate','daily','kl')
         if historical:
             unzip_folder(os.path.join(localdir, 'historical'),verbose=verbose)
         if recent:
             unzip_folder(os.path.join(localdir, 'recent'),verbose=verbose)
 
     if hourly:
-        hour_folders = ["air_temperature", "cloud_type", "precipitation", "pressure", "soil_temperature", "solar", "sun", "visibility", "wind"]
+        hour_folders = ["air_temperature", "cloud_type", "precipitation",
+                        "pressure", "soil_temperature", "solar", "sun",
+                        "visibility", "wind"]
         for folder in hour_folders:
-            localdir = os.path.join(userpath, 'pub','CDC','observations_germany','climate','hourly', folder)
+            localdir = os.path.join(userpath, 'pub','CDC',
+                                    'observations_germany','climate','hourly',
+                                    folder)
             if folder!="solar":
-                unzip_folder(os.path.join(localdir, 'historical'),verbose=verbose)
+                unzip_folder(os.path.join(localdir, 'historical'),
+                            verbose=verbose)
                 unzip_folder(os.path.join(localdir, 'recent'),verbose=verbose)
             else:
                 unzip_folder(localdir)
@@ -42,7 +49,11 @@ def main():
     be downloaded.
     """
     try:
-        options, args = getopt.getopt(sys.argv[1:], "vgrsh", ["verbose", "historical", "recent", "hourly","help"])
+        options, args = getopt.getopt(sys.argv[1:], "vgrsh", ["verbose",
+                                                              "historical",
+                                                              "recent",
+                                                              "hourly",
+                                                              "help"])
     except getopt.GetoptError as err:
         # print help information and exit:
         print(err)  # will print something like "option -a not recognized"
@@ -93,9 +104,9 @@ def usage():
     arguments:\n
     \t path : the path where you want to save the data \n
     options:\n
-    \t -v/--verbose : verbose mode\n
-    \t -g/--historical : download historical data\n
-    \t -r/--recent : download recent data\n
+    \t -v/--verbose : verbose mode
+    \t -g/--historical : download historical data
+    \t -r/--recent : download recent data
     \t -s/--hourly : download recent and historical hourly data
     \t -h/--help
     """)

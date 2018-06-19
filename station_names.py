@@ -1,13 +1,15 @@
-import numpy as np
 import os
-from ftplib import FTP
+
 import pickle
 import pandas as pd
+import numpy as np
+from ftplib import FTP
 
 def get_station_names():
     """ Return a dictonary containing the station ID's
     as keys and the list [Stations_id, von_datum, bis_datum, Stationshoehe,
-    geoBreite, geoLaenge, Stationsname, Bundesland] and these column names in a list as value.
+    geoBreite, geoLaenge, Stationsname, Bundesland] and these column names in a
+    list as value.
     """
 
     class Station:
@@ -29,7 +31,8 @@ def get_station_names():
     ftp.login()
 
     # Create a file stations.txt with all the station information
-    filename = "pub/CDC/observations_germany/climate/daily/kl/historical/KL_Tageswerte_Beschreibung_Stationen.txt"
+    filename = "pub/CDC/observations_germany/climate/daily/kl/historical/\
+                KL_Tageswerte_Beschreibung_Stationen.txt"
     file = open("stations.txt", 'wb')
     ftp.retrbinary('RETR '+ filename, file.write)
     file.close()
@@ -42,12 +45,18 @@ def get_station_names():
     for lineid, line in enumerate(fileorigin):
         if lineid > 1:
             line_vec = list(filter(None, line.split(' ')))
-            Stations[line_vec[0]] = Station(line_vec[0],line_vec[1], line_vec[2], line_vec[3],
-                                line_vec[4], line_vec[5], line_vec[6:-1], line_vec[-1])
-            stations_dict[Stations[line_vec[0]].Stations_id] = [Stations[line_vec[0]].von_datum,
-            Stations[line_vec[0]].bis_datum, Stations[line_vec[0]].Stationshoehe,
-            Stations[line_vec[0]].geoBreite, Stations[line_vec[0]].geoLaenge,
-            Stations[line_vec[0]].Stationsname, Stations[line_vec[0]].Bundesland]
+            Stations[line_vec[0]] = Station(line_vec[0],line_vec[1],
+                                            line_vec[2], line_vec[3],
+                                            line_vec[4], line_vec[5],
+                                            line_vec[6:-1], line_vec[-1])
+            stations_dict[Stations[line_vec[0]].Stations_id] =\
+                                        [Stations[line_vec[0]].von_datum,
+                                         Stations[line_vec[0]].bis_datum,
+                                         Stations[line_vec[0]].Stationshoehe,
+                                         Stations[line_vec[0]].geoBreite,
+                                         Stations[line_vec[0]].geoLaenge,
+                                         Stations[line_vec[0]].Stationsname,
+                                         Stations[line_vec[0]].Bundesland]
 
         elif lineid == 0:
             column_names = list(filter(None, line.split(' ')))
