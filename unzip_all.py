@@ -10,7 +10,7 @@ progress_bar_width = console_width - 6
 
 def unzip_folder(dir_name,verbose=True):
     extension = ".zip"
-    for item in os.listdir(dir_name): # loop through items in dir
+    for i, item in enumerate(os.listdir(dir_name)): # loop through items in dir
         if item.endswith(extension): # check for ".zip" extension
             file_name = dir_name + "/" + item
             #file_name = os.path.abspath(item) # get full path of files
