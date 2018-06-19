@@ -1,4 +1,4 @@
-import os, zipfile
+import os, zipfile, sys
 
 try:
     import shutil #this module can get the terminal width

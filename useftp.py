@@ -1,5 +1,7 @@
 from ftplib import FTP
-import os, sys, time
+import os
+import sys
+import time
 
 #prettify the progressbar
 try:
@@ -28,7 +30,8 @@ def compare_modification_times(mtimes,filepath):
     Write the filenames and date modified of the contents of a directory on the
     server to a file for comparison later.
     """
-    with open filepath as save_file:
+    # with open filepath as save_file:
+    pass
 
 def open_mod_dates(filename):
     # open the file containing the modified stamps of all the files that have
@@ -45,9 +48,9 @@ def save_mod_dates(mod_dates,filename):
 
 def download_folder(ftp, userpath,foldername, verbose):
     filenames = ftp.nlst(foldername)
-    mod_dates = open_mod_dates()
+    # mod_dates = open_mod_dates()
     for i, filename in enumerate(filenames):
-        if mod_dates[filename] == get_mod_date(): continue
+        # if mod_dates[filename] == get_mod_date(): continue
         local_filename = os.path.join(userpath, filename)
         file = open(local_filename, 'wb')
         ftp.retrbinary('RETR '+ filename, file.write)
