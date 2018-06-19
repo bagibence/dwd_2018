@@ -134,17 +134,19 @@ def set_station_trigger(db):
     db.execute(trigger_text)
 
 
-def set_up_connection(db, db_name, user='', password=None, host='127.0.0.1'):
+def set_up_connection(db, db_name, user='', password=None, host='127.0.0.1', create_tables=False):
     '''
     Sets up a connection with the database server.
+    Set create_tables to True if the tables don't exist.
     '''
     if password is None:
         password = getpass.getpass(prompt='postgres user password: ')
     db.bind(provider='postgres', user=user, password=password, host=host, database=db_name)
-    db.generate_mapping(create_tables = True)
+    db.generate_mapping(create_tables = create_tables)
     global conn_url
     conn_url = 'postgresql://{}:{}@{}:5432/{}'.format(user, password, host, db_name)
-    set_station_trigger(db)
+    if create_tables:
+        set_station_trigger(db)
 
 
 @porm.db_session
