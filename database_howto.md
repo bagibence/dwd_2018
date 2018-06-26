@@ -1,7 +1,7 @@
 # Running Jupyter notebook on the server and connecting to it
 
 1. Fire up the VPN and login to the server
-2. Start a notebook server: `jupyter notebook --no-browser --ip=0.0.0.0`
+2. Start a notebook server: `jupyter-notebook --no-browser --ip=0.0.0.0`
 3. See which port it started on and copy the token if you get one. Typically `8888`
 3. Open a browser and go to: `http://pcp2018.bccn-berlin.pri:8888` (replace `8888` with the port your server is running on)
 4. Enter your password or paste the token the jupyter notebook server gave you
