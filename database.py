@@ -172,33 +172,43 @@ def _insert_without_pandas(df, table_name):
 
 
 @porm.db_session
-def _insert_with_pandas(df, table_name):
+def _insert_with_pandas(df, table_name, auto_id=False, overwrite=False):
     indices_to_keep = []
+    rows_to_delete = []
     table_obj = db.entities[table_name]
 
-    if df.index.name is None:
+    if df.index.name is None and not auto_id:
         df_q = df.set_index(table_obj._pk_columns_)
     else:
         df_q = df.copy()
 
     try:
-        df_q.to_sql(table_name.lower(), conn_url, if_exists='append', index=True)
+        df_q.to_sql(table_name.lower(), conn_url, if_exists='append', index=not auto_id)
     except:
         for i in df_q.index:
             try:
-                table_obj[i]
+                row = table_obj[i]
+
+                if overwrite:
+                    rows_to_delete.append(row)
+                    indices_to_keep.append(i)
+
             except ObjectNotFound:
                 indices_to_keep.append(i)
+
             except:
                 print(i)
 
+        table_obj.select(lambda x: x in rows_to_delete).delete(bulk = True)
+        porm.commit()
+        print('starting insert')
         df_to_insert = df_q.loc[indices_to_keep]
-        df_to_insert.to_sql(table_name.lower(), conn_url, if_exists='append', index=True)
+        df_to_insert.to_sql(table_name.lower(), conn_url, if_exists='append', index=not auto_id)
 
 
 @porm.db_session
-def insert_into_table(df, table_name, use_pandas=True):
+def insert_into_table(df, table_name, use_pandas=True, auto_id=False, overwrite=False):
     if use_pandas:
-        _insert_with_pandas(df, table_name)
+        _insert_with_pandas(df, table_name, auto_id, overwrite)
     else:
         _insert_without_pandas(df, table_name)
