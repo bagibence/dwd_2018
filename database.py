@@ -23,8 +23,8 @@ class Station(db.Entity):
     measurements  = porm.Set('DailyMeasurement')
 
     @classmethod
-    def in_Berlin(cls):
-        return cls.select(lambda s: 'Berlin' in s.stationsname)
+    def in_city(cls, city_name):
+        return cls.select(lambda s: city_name in s.stationsname)
 
 
 class DailyMeasurement(db.Entity):
