@@ -217,4 +217,7 @@ def insert_into_table(df, table_name, use_pandas=True, auto_id=False, overwrite=
 
 @porm.db_session
 def query_to_dataframe(query):
-    return pd.read_sql_query(query.get_sql(), conn_url)
+    try:
+        return pd.read_sql_query(query.get_sql(), conn_url)
+    except:
+        return pd.DataFrame([o.to_dict() for o in query])
