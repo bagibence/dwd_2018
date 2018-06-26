@@ -74,7 +74,7 @@ class DailyPrediction(db.Entity):
     temperature_min    = porm.Required(float)
     wind_speed         = porm.Optional(float, nullable=True)
     humidity           = porm.Optional(float, nullable=True)
-    precipation_per    = porm.Optional(float, nullable=True)
+    precipitation_per  = porm.Optional(float, nullable=True)
     precipitation_l    = porm.Optional(float, nullable=True)
     wind_direction     = porm.Optional(str, 3, nullable=True)
     condition          = porm.Optional(str, nullable=True)
