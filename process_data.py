@@ -132,13 +132,13 @@ def clean_merged(merged, time_interval):
         try:
             merged_clean['mess_datum'] =\
                            pd.to_datetime(merged_clean['mess_datum'].apply(str), format='%Y%m%d%H:%M')
-        except TypeError:
+        except:
             print("no minutes")
         try:
             merged_clean['mess_datum'] =\
                            pd.to_datetime(merged_clean['mess_datum'].apply(str), format='%Y%m%d%H')
-        except TypeError:
-            print("something is strange") 
+        except:
+            print("minutes") 
 
     if time_interval=='daily':
         merged_clean = merged_clean.drop(['eor'],axis=1)
