@@ -130,7 +130,7 @@ def clean_merged(merged, time_interval):
 
     if time_interval=='hourly':
         merged_clean['mess_datum'] =\
-                           pd.to_datetime(merged_clean['mess_datum'].apply(str), format='%Y%m%d%H')
+                           pd.to_datetime(merged_clean['mess_datum'].apply(str), format='%Y%m%d%H:%M')
 
     if time_interval=='daily':
         merged_clean = merged_clean.drop(['eor'],axis=1)
