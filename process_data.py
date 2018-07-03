@@ -12,7 +12,7 @@ def process_data(userpath,stationnumber,time_interval,folder=False):
         merged = merge_hisrec_hourly(userpath,stationnumber,folder)
 
     if merged.empty:
-        clean_data = merged
+        clean_data = pd.DataFrame()
     else:
         clean_data = clean_merged(merged, time_interval)
 
@@ -114,7 +114,7 @@ def get_one_hourly_folder(userpath,stationnumber,folder):
             recentdata = recentdata.drop(['eor'],axis=1)
         else:
             print('no rec')
-            recentdata = pd.DataFrame()
+            recentdata = pd.DataFrame({'MESS_DATUM': []})
 
         merged = pd.concat([histdata,recentdata])
 
