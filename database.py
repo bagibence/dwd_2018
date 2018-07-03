@@ -1,6 +1,6 @@
 import pony.orm as porm
 #import database
-from datetime import date
+import datetime
 #import station_names
 import getpass
 import pandas as pd
@@ -13,8 +13,8 @@ db = porm.Database()
 
 class Station(db.Entity):
     stations_id   = porm.PrimaryKey(int, auto=False)
-    von_datum     = porm.Optional(date)
-    bis_datum     = porm.Optional(date)
+    von_datum     = porm.Optional(datetime.date)
+    bis_datum     = porm.Optional(datetime.date)
     stationshoehe = porm.Optional(int)
     geobreite     = porm.Optional(float)
     geolaenge     = porm.Optional(float)
@@ -28,7 +28,7 @@ class Station(db.Entity):
 
 
 class DailyMeasurement(db.Entity):
-    mess_datum  = porm.Required(date)
+    mess_datum  = porm.Required(datetime.date)
     stations_id = porm.Required(int)
     station     = porm.Optional(Station)
     qn_3        = porm.Optional(int)  # quality level of next columns
@@ -68,8 +68,8 @@ class DailyPrediction(db.Entity):
     id                 = porm.PrimaryKey(int, auto=True)
     website            = porm.Required(str)
     city               = porm.Required(str)
-    date_of_acquisition = porm.Required(str)
-    date_for_which_weather_is_predicted = porm.Required(str)
+    date_of_acquisition = porm.Required(datetime.date)
+    date_for_which_weather_is_predicted = porm.Required(datetime.date)
     temperature_max    = porm.Required(float)
     temperature_min    = porm.Required(float)
     wind_speed         = porm.Optional(float, nullable=True)
@@ -86,8 +86,8 @@ class HourlyPrediction(db.Entity):
     id                  = porm.PrimaryKey(int, auto=True)
     website             = porm.Required(str)
     city                = porm.Required(str)
-    date_of_acquisition = porm.Required(str)
-    date_for_which_weather_is_predicted = porm.Required(str)
+    date_of_acquisition = porm.Required(datetime.datetime)
+    date_for_which_weather_is_predicted = porm.Required(datetime.datetime)
     temperature         = porm.Required(float)
     wind_speed          = porm.Optional(float)
     humidity            = porm.Optional(float)
@@ -103,7 +103,7 @@ class DailyPeriodPrediction(db.Entity):
     id                  = porm.PrimaryKey(int, auto=True)
     website             = porm.Required(str)
     city                = porm.Required(str)
-    date_of_acquisition = porm.Required(str)
+    date_of_acquisition = porm.Required(datetime.datetime)
     date_for_which_weather_is_predicted = porm.Required(str)
     temperature         = porm.Required(float)
     wind_speed          = porm.Optional(float)
