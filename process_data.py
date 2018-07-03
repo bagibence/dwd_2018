@@ -11,8 +11,6 @@ def process_data(userpath,stationnumber,time_interval,folder=False):
     elif time_interval=='hourly':
         merged = merge_hisrec_hourly(userpath,stationnumber,folder)
 
-    print(merged)
-
     if merged.empty:
         clean_data = merged
     else:
@@ -120,7 +118,7 @@ def get_one_hourly_folder(userpath,stationnumber,folder):
 
         merged = pd.concat([histdata,recentdata])
 
-        return merged
+    return merged
 
 
 def clean_merged(merged, time_interval):
