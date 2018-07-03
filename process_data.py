@@ -129,16 +129,18 @@ def clean_merged(merged, time_interval):
                                                 keep='first')
 
     if time_interval=='hourly':
+        # some stations have the time given with hours and minutes, some just with hours
+        # => we try both for conversion
         try:
             merged_clean['mess_datum'] =\
                            pd.to_datetime(merged_clean['mess_datum'].apply(str), format='%Y%m%d%H:%M')
         except:
-            print("no minutes")
+            pass
         try:
             merged_clean['mess_datum'] =\
                            pd.to_datetime(merged_clean['mess_datum'].apply(str), format='%Y%m%d%H')
         except:
-            print("minutes") 
+            pass
 
     if time_interval=='daily':
         merged_clean = merged_clean.drop(['eor'],axis=1)
