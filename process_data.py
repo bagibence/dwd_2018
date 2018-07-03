@@ -49,10 +49,25 @@ def merge_hisrec_daily(userpath,stationnumber):
 
 def merge_hisrec_hourly(userpath,stationnumber,folder):
     hour_folders = ["air_temperature", "cloud_type", "precipitation",
-                    "pressure", "soil_temperature", "sun", "visibility", "wind"]
+                    "pressure", "soil_temperature", "sun", "visibility", "wind", "solar"]
 
     if folder not in hour_folders:
         print('wrong folder')
+    elseif folder=="solar":
+        print(folder)
+        solarpath = os.path.join(userpath, 'pub','CDC','observations_germany',
+                                'climate','hourly', folder)
+        solarfile_tmp = os.path.join(solarpath, "produkt*")
+        solarfile_tmp += str(stationnumber).zfill(5)+'.txt'
+        solarlist = glob.glob(solarfile_tmp)
+        if solarlist:
+            print('solar exists')
+            solarfile = glob.glob(solarfile_tmp)[0]
+            merged_all = pd.read_table(solarfile, sep=";", low_memory=False)
+            merged_all = merged_all.drop(['eor'],axis=1)
+        else:
+            print('no solar')
+            merged_all = pd.DataFrame()
     else:
         print(folder)
         histpath = os.path.join(userpath, 'pub','CDC','observations_germany',
