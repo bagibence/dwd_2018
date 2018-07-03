@@ -94,6 +94,11 @@ def clean_merged(merged, time_interval):
     merged_clean = merged_clean.drop_duplicates(subset = ['stations_id',
                                                           'mess_datum'],
                                                 keep='first')
+
+    if time_interval=='hourly':
+        merged_clean['mess_datum'] =\
+                           pd.to_datetime(merged_clean['mess_datum'].apply(str), format='%Y%m%d%H')
+
     if time_interval=='daily':
         merged_clean = merged_clean.drop(['eor'],axis=1)
         merged_clean['mess_datum'] =\
