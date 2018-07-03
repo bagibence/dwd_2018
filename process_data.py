@@ -53,7 +53,7 @@ def merge_hisrec_hourly(userpath,stationnumber,folder):
 
     if folder not in hour_folders:
         print('wrong folder')
-    elseif folder=="solar":
+    elif folder=="solar":
         print(folder)
         solarpath = os.path.join(userpath, 'pub','CDC','observations_germany',
                                 'climate','hourly', folder)
