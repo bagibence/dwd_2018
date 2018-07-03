@@ -4,12 +4,12 @@ import glob
 import numpy as np
 import pandas as pd
 
-def process_data(userpath,stationnumber,time_interval):
+def process_data(userpath,stationnumber,time_interval,folder=False):
     #function for database group to call
     if time_interval=='daily':
         merged = merge_hisrec_daily(userpath,stationnumber)
     elif time_interval=='hourly':
-        merged = merge_hisrec_hourly(userpath,stationnumber)
+        merged = merge_hisrec_hourly(userpath,stationnumber,folder)
 
     if merged.empty:
         clean_data = merged
@@ -47,12 +47,13 @@ def merge_hisrec_daily(userpath,stationnumber):
 
     return merged
 
-def merge_hisrec_hourly(userpath,stationnumber):
+def merge_hisrec_hourly(userpath,stationnumber,folder):
     hour_folders = ["air_temperature", "cloud_type", "precipitation",
                     "pressure", "soil_temperature", "sun", "visibility", "wind"]
 
-    for i,folder in enumerate(hour_folders):
-
+    if folder not in hour_folders:
+        print('wrong folder')
+    else:
         print(folder)
         histpath = os.path.join(userpath, 'pub','CDC','observations_germany',
                                 'climate','hourly', folder, 'historical')
@@ -69,7 +70,7 @@ def merge_hisrec_hourly(userpath,stationnumber):
             histdata = histdata.drop(['eor'],axis=1)
         else:
             print('no hist')
-            histdata = pd.DataFrame({'MESS_DATUM': []})
+            histdata = pd.DataFrame()
 
         recfile_tmp = os.path.join(recpath, "produkt*")
         recfile_tmp += str(stationnumber).zfill(5)+'.txt'
@@ -81,16 +82,9 @@ def merge_hisrec_hourly(userpath,stationnumber):
             recentdata = recentdata.drop(['eor'],axis=1)
         else:
             print('no rec')
-            recentdata = pd.DataFrame({'MESS_DATUM': []})
+            recentdata = pd.DataFrame()
 
-        if i==0:
-            merged_all=pd.concat([histdata,recentdata])
-        else:
-            folderdata = pd.concat([histdata,recentdata])
-            if not folderdata.empty:
-                folderdata = folderdata.drop(['STATIONS_ID'],axis=1)
-            merged_all = merged_all.merge(folderdata, on='MESS_DATUM',
-                                          how='outer')
+        merged_all=pd.concat([histdata,recentdata])
 
     return merged_all
 
