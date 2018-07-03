@@ -11,6 +11,8 @@ def process_data(userpath,stationnumber,time_interval,folder=False):
     elif time_interval=='hourly':
         merged = merge_hisrec_hourly(userpath,stationnumber,folder)
 
+    print(merged)
+
     if merged.empty:
         clean_data = merged
     else:
