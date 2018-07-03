@@ -51,10 +51,28 @@ def merge_hisrec_hourly(userpath,stationnumber,folder):
     hour_folders = ["air_temperature", "cloud_type", "precipitation",
                     "pressure", "soil_temperature", "sun", "visibility", "wind", "solar"]
 
-    if folder not in hour_folders:
+    if folder=="all":
+        for i,folder in enumerate(hour_folders):
+            if i==0:
+                merged_all=get_one_hourly_folder(userpath,stationnumber,folder)
+            else:
+                folderdata = get_one_hourly_folder(userpath,stationnumber,folder)
+                if not folderdata.empty:
+                    folderdata = folderdata.drop(['STATIONS_ID'],axis=1)
+                    merged_all = merged_all.merge(folderdata, on='MESS_DATUM',
+                                          how='outer')
+    elif folder not in hour_folders:
         print('wrong folder')
-    elif folder=="solar":
+    else:
         print(folder)
+        merged_all = get_one_hourly_folder(userpath,stationnumber,folder)
+
+    return merged_all
+
+
+def get_one_hourly_folder(userpath,stationnumber,folder):
+
+    if folder=="solar":
         solarpath = os.path.join(userpath, 'pub','CDC','observations_germany',
                                 'climate','hourly', folder)
         solarfile_tmp = os.path.join(solarpath, "produkt*")
@@ -63,17 +81,16 @@ def merge_hisrec_hourly(userpath,stationnumber,folder):
         if solarlist:
             print('solar exists')
             solarfile = glob.glob(solarfile_tmp)[0]
-            merged_all = pd.read_table(solarfile, sep=";", low_memory=False)
-            merged_all = merged_all.drop(['eor'],axis=1)
+            merged = pd.read_table(solarfile, sep=";", low_memory=False)
+            merged = merged.drop(['eor'],axis=1)
         else:
             print('no solar')
-            merged_all = pd.DataFrame()
+            merged = pd.DataFrame({'MESS_DATUM': []})
     else:
-        print(folder)
         histpath = os.path.join(userpath, 'pub','CDC','observations_germany',
-                                'climate','hourly', folder, 'historical')
+                                    'climate','hourly', folder, 'historical')
         recpath  = os.path.join(userpath, 'pub','CDC','observations_germany',
-                                'climate','hourly', folder, 'recent')
+                                    'climate','hourly', folder, 'recent')
 
         histfile_tmp = os.path.join(histpath, "produkt*")
         histfile_tmp += str(stationnumber).zfill(5)+'.txt'
@@ -85,7 +102,7 @@ def merge_hisrec_hourly(userpath,stationnumber,folder):
             histdata = histdata.drop(['eor'],axis=1)
         else:
             print('no hist')
-            histdata = pd.DataFrame()
+            histdata = pd.DataFrame({'MESS_DATUM': []})
 
         recfile_tmp = os.path.join(recpath, "produkt*")
         recfile_tmp += str(stationnumber).zfill(5)+'.txt'
@@ -99,9 +116,10 @@ def merge_hisrec_hourly(userpath,stationnumber,folder):
             print('no rec')
             recentdata = pd.DataFrame()
 
-        merged_all=pd.concat([histdata,recentdata])
+        merged = pd.concat([histdata,recentdata])
 
-    return merged_all
+        return merged
+
 
 def clean_merged(merged, time_interval):
     merged_clean = merged.replace('-999', np.nan, regex=True)
