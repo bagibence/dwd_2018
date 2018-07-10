@@ -200,8 +200,10 @@ def _insert_with_pandas(df, table_name, auto_id=False, overwrite=False):
             except:
                 print(i)
 
-        table_obj.select(lambda x: x in rows_to_delete).delete(bulk = True)
-        porm.commit()
+        if overwrite:
+            table_obj.select(lambda x: x in rows_to_delete).delete(bulk = True)
+            porm.commit()
+
         print('starting insert')
         df_to_insert = df_q.loc[indices_to_keep]
         df_to_insert.to_sql(table_name.lower(), conn_url, if_exists='append', index=not auto_id)
