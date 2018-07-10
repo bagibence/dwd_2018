@@ -31,8 +31,7 @@ def get_station_names():
     ftp.login()
 
     # Create a file stations.txt with all the station information
-    filename = "pub/CDC/observations_germany/climate/daily/kl/historical/\
-                KL_Tageswerte_Beschreibung_Stationen.txt"
+    filename = "pub/CDC/observations_germany/climate/daily/kl/historical/KL_Tageswerte_Beschreibung_Stationen.txt"
     file = open("stations.txt", 'wb')
     ftp.retrbinary('RETR '+ filename, file.write)
     file.close()
