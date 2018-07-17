@@ -1,7 +1,7 @@
 import pony.orm as porm
 #import database
 import datetime
-#import station_names
+import station_names
 import getpass
 import pandas as pd
 
@@ -223,3 +223,39 @@ def query_to_dataframe(query):
         return pd.read_sql_query(query.get_sql(), conn_url)
     except:
         return pd.DataFrame([o.to_dict() for o in query])
+    
+    
+@porm.db_session
+def update_station_dates(verbose=True):
+    df = station_names.get_stations_dataframe()
+    
+    indices_to_keep = []
+    table_obj = db.entities['Station']
+
+    if df.index.name is None:
+        df_q = df.set_index(table_obj._pk_columns_)
+    else:
+        df_q = df.copy()
+
+    
+    if verbose: print('updating dates')
+
+    for i in df_q.index:
+        try:
+            row = table_obj[i]
+            
+            row.von_datum = df_q.loc[i].von_datum.date()
+            row.bis_datum = df_q.loc[i].bis_datum.date()
+            
+        except ObjectNotFound:
+            indices_to_keep.append(i)
+
+        except:
+            print(i)
+
+    if verbose: print('inserting new stations...')
+
+    df_to_insert = df_q.loc[indices_to_keep]
+    df_to_insert.to_sql('station', conn_url, if_exists='append', index=True)
+
+    if verbose: print('inserted {} new stations'.format(len(indices_to_keep)))
