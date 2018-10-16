@@ -22,10 +22,9 @@ class Station(db.Entity):
     bundesland    = porm.Optional(str)
     measurements  = porm.Set('DailyMeasurement')
 
-    @classmethod
-    def in_city(cls, city_name):
-        return cls.select(lambda s: city_name in s.stationsname)
 
+    def in_city(self, cityname):
+        return self.stationsname.lower().startswith(cityname.lower())
 
 class DailyMeasurement(db.Entity):
     mess_datum  = porm.Required(datetime.date)
