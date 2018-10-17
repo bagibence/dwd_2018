@@ -26,6 +26,13 @@ class Station(db.Entity):
     def in_city(self, cityname):
         return self.stationsname.lower().startswith(cityname.lower())
 
+
+    @property
+    def active(self):
+        """Station was active in the last 4 weeks"""
+        return self.bis_datum > (datetime.datetime.now().date() - datetime.timedelta(weeks = 4))
+
+
 class DailyMeasurement(db.Entity):
     mess_datum  = porm.Required(datetime.date)
     stations_id = porm.Required(int)
