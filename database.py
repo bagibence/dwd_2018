@@ -228,7 +228,7 @@ def query_to_dataframe(query):
     try:
         return pd.read_sql_query(query.get_sql(), conn_url)
     except:
-        return pd.DataFrame([o.to_dict() for o in query])
+        return pd.DataFrame([o.to_dict() for o in query]).reindex(columns = query.first()._columns_)
     
     
 @porm.db_session
